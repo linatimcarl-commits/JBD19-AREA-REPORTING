@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCBOS | Historical Sales & Market Opportunity Report</title>
+<style>
+:root{--red:#c8102e;--red2:#a90d25;--ink:#202633;--muted:#687386;--line:#e6e9ef;--bg:#f4f6fa;--gold:#ffc72c;--green:#168653;--blue:#2459a6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(115deg,#a90d25,#df1e35);color:white;padding:30px max(22px,calc((100% - 1200px)/2));}
+.brand{font-size:11px;font-weight:800;letter-spacing:2px;opacity:.85}.headrow{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+h1{font-size:clamp(25px,4vw,38px);line-height:1.1;margin:8px 0}.subtitle{color:#ffe8ec;max-width:720px}
+.header-tag{border:1px solid #ffffff66;border-radius:999px;padding:8px 13px;font-size:11px;font-weight:700;letter-spacing:.8px}
+main{max-width:1200px;margin:24px auto;padding:0 18px 50px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+select,input,button{font:inherit;border-radius:9px;padding:10px 12px;border:1px solid #d9dee8;background:white;color:var(--ink)}
+input{min-width:220px;flex:1}button{cursor:pointer;font-weight:700}.primary{background:var(--red);color:white;border-color:var(--red)}button:hover{filter:brightness(.96)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0}
+.card,.panel{background:white;border:1px solid var(--line);border-radius:15px;box-shadow:0 3px 14px #1c29400a}
+.kpi{padding:17px}.kpi-label{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.7px;text-transform:uppercase}.kpi-value{font-size:25px;font-weight:800;margin:5px 0 2px;letter-spacing:-.5px}.kpi-note{font-size:11px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 11px}.section-title h2{font-size:18px;margin:0}.section-title p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.charts{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}.panel{padding:18px;min-width:0}.panel h3{margin:0 0 12px;font-size:14px}.chart-wrap{height:245px;position:relative}.chart-wrap canvas{width:100%;height:100%}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.store-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.store-chip{border:1px solid var(--line);border-radius:11px;padding:12px}.store-chip strong{display:block;font-size:12px}.store-chip span{font-size:11px;color:var(--muted)}
+.table-panel{padding:0;overflow:hidden}.table-top{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.table-top h3{margin:0}.table-scroll{overflow:auto;max-height:600px}
+table{width:100%;border-collapse:collapse;min-width:1000px}
+.edit-cell{width:100%;min-width:95px;padding:7px 8px;border:1px solid transparent;background:#fbfcfe;border-radius:6px;font-size:12px;text-align:right}
+.edit-cell:hover,.edit-cell:focus{border-color:#c8102e;background:white;outline:none}
+.name-cell{text-align:left;min-width:190px;font-weight:650}
+.edit-cell:focus{box-shadow:0 0 0 2px #c8102e18}th,td{padding:11px 13px;text-align:left;border-bottom:1px solid #edf0f4;font-size:12px}th{position:sticky;top:0;background:#f8f9fc;color:#586274;text-transform:uppercase;letter-spacing:.5px;font-size:10px;z-index:1}td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.account{font-weight:700}.positive{color:var(--green);font-weight:800}.negative{color:var(--red);font-weight:800}.neutral{color:#8791a2}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1f3f7;color:#667085;font-size:10px;font-weight:700}
+.note{background:#fff9e8;border:1px solid #f4e4b7;border-radius:12px;padding:13px 15px;color:#6b571d;font-size:12px;margin-top:16px}
+footer{text-align:center;color:#8992a1;font-size:11px;padding:22px}
+@media(max-width:850px){.kpis{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}.store-summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr;gap:8px}.kpi{padding:12px}.kpi-value{font-size:19px}.store-summary{grid-template-columns:1fr 1fr}}
+@media print{.edit-cell{border:0;background:transparent;padding:2px;color:#202633}body{background:white}.toolbar,.no-print{display:none!important}main{max-width:none;margin:0;padding:0 8px}header{padding:18px 24px;print-color-adjust:exact;-webkit-print-color-adjust:exact}.card,.panel{box-shadow:none;break-inside:avoid}.table-scroll{max-height:none;overflow:visible}th{position:static}.table-panel{overflow:visible}table{min-width:0}th,td{padding:6px;font-size:9px}.section-title{margin-top:16px}.charts{grid-template-columns:1.2fr 1fr}.chart-wrap{height:190px}}
+</style>
+</head>
+<body>
+<header><div class="brand">JOLLIBEE • BIG ORDER SERVICES</div><div class="headrow"><div><h1>Historical Sales &<br>Market Opportunity Report</h1><div class="subtitle">A consolidated view of account coverage, forecasted opportunity, and year-on-year sales performance across the store network.</div></div><div class="header-tag">JCBOS MANAGEMENT REPORT</div></div></header>
+<main>
+<div class="toolbar no-print">
+<select id="storeFilter" aria-label="Filter store"><option value="all">All stores</option></select>
+<select id="statusFilter" aria-label="Filter performance"><option value="all">All performance</option><option value="positive">Positive variance</option><option value="negative">Negative variance</option><option value="missing">Incomplete sales data</option></select>
+<input id="search" placeholder="Search account or establishment..." aria-label="Search accounts">
+<button class="primary" onclick="window.print()">Print / Save as PDF</button>
+<button onclick="addAccount()">+ Add account</button>
+<button onclick="exportCSV()">Export CSV</button>
+<button onclick="resetFilters()">Reset filters</button>
+</div>
+<section class="kpis" id="kpis"></section>
+<div class="section-title"><div><h2>Performance overview</h2><p>Figures are calculated from values recorded in the uploaded workbook.</p></div></div>
+<section class="charts">
+<div class="panel"><h3>Current year vs. last year sales by store</h3><div class="chart-wrap"><canvas id="salesChart"></canvas></div><div class="legend"><span><i class="dot" style="background:#c8102e"></i>Current year</span><span><i class="dot" style="background:#aab3c2"></i>Last year</span></div></div>
+<div class="panel"><h3>Sales variance distribution</h3><div class="chart-wrap"><canvas id="varianceChart"></canvas></div><div class="legend"><span><i class="dot" style="background:#168653"></i>Positive</span><span><i class="dot" style="background:#c8102e"></i>Negative</span><span><i class="dot" style="background:#aab3c2"></i>Not recorded</span></div></div>
+</section>
+<div class="section-title"><div><h2>Store summary</h2><p>Account counts and recorded sales by store.</p></div></div>
+<section class="store-summary" id="storeSummary"></section>
+<div class="section-title"><div><h2>Historical account register</h2><p>Search and filter establishment-level opportunity and sales records.</p></div><span class="tag" id="recordCount">0 records</span></div>
+<section class="panel table-panel">
+<div class="table-top"><div><h3>Editable account-level details</h3><div style="font-size:11px;color:#687386;margin-top:3px">Click any field to edit. Variance and dashboard totals update automatically.</div></div><span class="tag" id="saveStatus">Changes save in this browser</span></div>
+<div class="table-scroll"><table><thead><tr><th>Store</th><th>Account / Establishment</th><th>Population</th><th>Forecasted sales (₱)</th><th>Current year sales (₱)</th><th>Last year sales (₱)</th><th>Variance (₱)</th></tr></thead><tbody id="dataRows"></tbody></table></div>
+</section>
+<div class="note"><strong>Reporting note:</strong> This report preserves the source workbook's recorded values. Blank cells are treated as “not recorded,” not as zero. When both current-year and last-year sales are entered, variance is automatically calculated as current year minus last year. Confirm the reporting year labels and update incomplete entries before using this report as a final performance submission.</div>
+</main>
+<footer>JCBOS • Historical Sales & Market Opportunity • Prepared from the supplied HISTORICAL DATA workbook</footer>
+<script>
+const BASE_DATA = [{"sheet": "JB TC", "store": "Jollibee Town Center", "records": [{"name": "Cielito Zamora Memorial Elementary School", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "Camarin Elementary School", "population": 5000.0, "forecast": 1000000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "Camarin High School", "population": 4200.0, "forecast": 300000.0, "current": null, "last": 300000.0, "variance": null}, {"name": "Caloocan City Hall", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Meralco Business Center", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Maynilad North Caloocan", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Petron Gasul", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Caloocan City North Medical Center", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Puregold Camarin", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Bahay Consuelo House of Elderly", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Great Emmanuel School of Caloocan", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Mystical Rose School of Caloocan", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Union Village Christian Academy", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Matrix Subdivision", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Del Rey Ville 2", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "St Claire College of Caloocan", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Access Computer College", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "St Agnes Parish", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Dreamland resort", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Metropolotan Instutute of Arts and Sciences", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Nodado General Hospital", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Bgy 174", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Bgy 173 (Right Side)", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Cielito Zamora Memorial High School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Camarin Doctors Hospital", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "JBKC", "store": "Jollibee Kiko Camarin", "records": [{"name": "CNES", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "CADES ANNEX", "population": 5000.0, "forecast": 1000000.0, "current": null, "last": null, "variance": null}, {"name": "CADES", "population": 4200.0, "forecast": 300000.0, "current": null, "last": null, "variance": null}, {"name": "A MABINI ELEMENTARY SCHOOL", "population": null, "forecast": 5292.0, "current": null, "last": 5292.0, "variance": null}, {"name": "ST NINO DAY CARE", "population": null, "forecast": 9010.0, "current": null, "last": 9010.0, "variance": null}, {"name": "MOTHER AND CHILD", "population": null, "forecast": 11424.0, "current": null, "last": 11424.0, "variance": null}, {"name": "LITTLE SHEPERD DAY CARE", "population": null, "forecast": 8568.0, "current": null, "last": 8568.0, "variance": null}, {"name": "GUNAI KBA", "population": null, "forecast": 7712.0, "current": null, "last": 7712.0, "variance": null}, {"name": "VENTURE CDC", "population": null, "forecast": 5944.0, "current": null, "last": 5944.0, "variance": null}, {"name": "DIVINE MERCY DAY CARE CENTER", "population": null, "forecast": 8904.0, "current": null, "last": 8904.0, "variance": null}, {"name": "SAN ROQUE SUPERMARKET", "population": null, "forecast": 16000.0, "current": null, "last": 16000.0, "variance": null}, {"name": "MANDEX", "population": null, "forecast": 32802.0, "current": null, "last": 32802.0, "variance": null}, {"name": "MACOPA CDC", "population": null, "forecast": 7379.0, "current": null, "last": 7379.0, "variance": null}, {"name": "MUNTING KERUBIN CDC", "population": null, "forecast": 8273.0, "current": null, "last": 8273.0, "variance": null}, {"name": "SAN VICENTE SCHOOL", "population": null, "forecast": 42139.0, "current": null, "last": 42139.0, "variance": null}, {"name": "THE LORD OF WISOM", "population": null, "forecast": 70000.0, "current": null, "last": 70000.0, "variance": null}, {"name": "GOD CENTER ACHIEVER", "population": null, "forecast": 9891.0, "current": null, "last": 9891.0, "variance": null}, {"name": "D' BLESSED MOTHER ACADEMY", "population": null, "forecast": 37974.0, "current": null, "last": 37974.0, "variance": null}, {"name": "CATLEY DAY CARE", "population": null, "forecast": 24415.0, "current": null, "last": 24415.0, "variance": null}, {"name": "BATA KALINGA", "population": null, "forecast": 7000.0, "current": null, "last": 7000.0, "variance": null}], "note": ""}, {"sheet": "JB BS", "store": "Jollibee Bagong Silang", "records": [{"name": "Bagong Siang Elementary Schorl", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "Gabriela Silang Elementary school", "population": 5000.0, "forecast": 1000000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "Sto Niño Elementary school", "population": 4200.0, "forecast": 300000.0, "current": null, "last": 300000.0, "variance": null}, {"name": "Rene Cayetano elementary School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Pag Asa Elementary (Ehool", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "St Fnancis Sc hol (Evergreen Subdlivision)", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "SEMB (Exergreen Subdivision)", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Children's International Accounts", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Barangay 176 Hall", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "JB MP", "store": "Jollibee Metroplaza", "records": [{"name": "ALL DAY CARE IN BAGON SILANG", "population": 10000.0, "forecast": 700000.0, "current": null, "last": null, "variance": null}, {"name": "ALL PRIVATE SCHOOLS IN BAGONG SILANG", "population": 5000.0, "forecast": 1000000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "SILANGAN ELEMENTARY SCHOOL", "population": 4200.0, "forecast": 300000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "BENIGNO AQUINO HIGH SCHOOL", "population": null, "forecast": null, "current": null, "last": 300000.0, "variance": null}, {"name": "KALAYAAN ELEMENTARY SCHOOL", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "KALAYAAN HIGH SCHOOL", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "TALA HIGH SCHOOL", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "GLORIETA AREA", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "ZAB DT", "store": "Jollibee Zabarte Drive-Thru", "records": [{"name": "BRGY 174", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "BRGY 175", "population": 5000.0, "forecast": 1000000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "NEW LAND SCHOOL", "population": 4200.0, "forecast": 300000.0, "current": null, "last": 300000.0, "variance": null}, {"name": "OUR LADY OF LOURDES", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "DEL RAY", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "BRIXTON BAPTIST CHURCH", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "JB BAGUMBONG DT", "store": "Jollibee Bagumbong Drive-Thru", "records": [{"name": "Barangay 171", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "Antonio Luna High School", "population": 5000.0, "forecast": 1000000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "Antonio Luna Elementary School", "population": 4200.0, "forecast": 300000.0, "current": null, "last": 300000.0, "variance": null}, {"name": "Bagumbong Elementary School - Shared With JB PG Deparo", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Sampaguita Elementary School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Sampaguita High School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "St. Teresa of Avila Academy", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Our Lord's Angel School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Mother of Perpetual Academy", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Jacob Seeds Learning Center", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Kapit Bahayan Aratiri Learning Center", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Cedar Hills Academy", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Saint Padre Pio Church", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Henry Gusse School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Escuela De Sophia Shared with JB PG Deparo", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Young Achievers School - Shared with JB PG Deparo | Allow Walk-in to JB SMNC", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Immaculate Mother Academy - Shared with JB SM Caloocan Allow walk-in to JB SMNC", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Saint Bonodiot Sohool of Novalichos Sharod with JB PC Doparo | Allow walk in to JB SMNC", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "JLH Kids Ministry", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Caloocan Sports Comple - Shared with Deparo Rd. & JB SM City Caloocan", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Omnipack Industrial /Don C Factory/Zoom Lion Equipments", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Reticure Inc /Devex Incorporated/MC laygo Builders", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "All Day Care & learning institution along Bagumbong", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "All HOA & Subdivissions along Bagumbong Road to Bagumbong Dulo", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "All HOA & Subdivissions along Sranay Malapitan Road", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "All Establishments at Bagumbong Road, Saranay Road - Bagumbong Dulo", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "JB NCB", "store": "Jollibee North Caloocan Boundary", "records": [{"name": "Bagong Siang Elementary Schorl", "population": 10000.0, "forecast": 700000.0, "current": 1000000.0, "last": 700000.0, "variance": 300000.0}, {"name": "Gabriela Silang Elementary school", "population": 5000.0, "forecast": 1000000.0, "current": 520000.0, "last": 1000000.0, "variance": -480000.0}, {"name": "Sto Niño Elementary school", "population": 4200.0, "forecast": 300000.0, "current": null, "last": 300000.0, "variance": null}, {"name": "Rene Cayetano elementary School", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Pag Asa Elementary (Ehool", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "St Fnancis Sc hol (Evergreen Subdlivision)", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "SEMB (Exergreen Subdivision)", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Children's International Accounts", "population": null, "forecast": null, "current": null, "last": null, "variance": null}, {"name": "Barangay 176 Hall", "population": null, "forecast": null, "current": null, "last": null, "variance": null}], "note": ""}, {"sheet": "JB SM CALOOCAN", "store": "Jollibee SM City Caloocan", "records": [], "note": "No historical entries found in the source workbook."}];
+let DATA = JSON.parse(JSON.stringify(BASE_DATA));
+const STORAGE_KEY = "jcbos_historical_report_edit_v2";
+function loadSaved(){
+ try{
+  const saved=localStorage.getItem(STORAGE_KEY);
+  if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)) DATA=parsed;}
+ }catch(e){console.warn("Saved data could not be loaded.",e);}
+}
+function persist(){
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+  const status=document.getElementById("saveStatus");
+  if(status) status.textContent="Saved in this browser • "+new Date().toLocaleTimeString();
+ }catch(e){
+  const status=document.getElementById("saveStatus");
+  if(status) status.textContent="Could not save in browser — export CSV backup";
+ }
+}
+const money = v => v==null ? "—" : "₱"+Number(v).toLocaleString("en-PH",{maximumFractionDigits:0});
+const number = v => v==null ? "—" : Number(v).toLocaleString("en-PH",{maximumFractionDigits:0});
+function getAllRows(){return DATA.flatMap(s=>s.records.map(r=>({...r,store:s.store,sheet:s.sheet})));}
+const totals = rows => ({
+ current: rows.reduce((a,r)=>a+(r.current??0),0),
+ last: rows.reduce((a,r)=>a+(r.last??0),0),
+ forecast: rows.reduce((a,r)=>a+(r.forecast??0),0),
+ population: rows.reduce((a,r)=>a+(r.population??0),0),
+ currentCount: rows.filter(r=>r.current!=null).length,
+ lastCount: rows.filter(r=>r.last!=null).length,
+ varianceRows: rows.filter(r=>r.variance!=null),
+ positive: rows.filter(r=>(r.current!=null&&r.last!=null?r.current-r.last:r.variance)>0).length,
+ negative: rows.filter(r=>(r.current!=null&&r.last!=null?r.current-r.last:r.variance)<0).length,
+ incomplete: rows.filter(r=>r.current==null||r.last==null).length
+});
+const fmtPct=(a,b)=>b?((a-b)/Math.abs(b)*100).toFixed(1)+"%":"—";
+function inputVal(v){return v==null?"":String(v);}
+function bindEditableCells(){
+ document.querySelectorAll(".edit-cell").forEach(el=>{
+  el.addEventListener("change",()=>{
+   const si=Number(el.dataset.si),ri=Number(el.dataset.ri),field=el.dataset.field;
+   let value=el.value.trim();
+   if(field==="name"){if(!value){alert("Account name cannot be blank.");el.value=DATA[si].records[ri].name;return;}DATA[si].records[ri][field]=value;}
+   else DATA[si].records[ri][field]=value===""?null:Number(value);
+   const rec=DATA[si].records[ri];
+   if(rec.current!=null&&rec.last!=null) rec.variance=rec.current-rec.last;
+   else rec.variance=null;
+   persist();render();
+  });
+ });
+}
+function addAccount(){
+ const storeName=document.getElementById("storeFilter").value;
+ const target=storeName==="all"?DATA[0]:DATA.find(s=>s.store===storeName);
+ if(!target){alert("Select a store first, then add an account.");return;}
+ const name=prompt("Enter the account or establishment name:");
+ if(!name||!name.trim())return;
+ target.records.push({name:name.trim(),population:null,forecast:null,current:null,last:null,variance:null});
+ persist();document.getElementById("search").value="";render();
+}
+function exportCSV(){
+ const headers=["Store","Account / Establishment","Population","Forecasted Sales","Current Year Sales","Last Year Sales","Variance"];
+ const lines=[headers,...allRowsForExport().map(r=>[r.store,r.name,r.population??"",r.forecast??"",r.current??"",r.last??"",r.current!=null&&r.last!=null?r.current-r.last:(r.variance??"")])];
+ const csv=lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\\r\\n");
+ const blob=new Blob(["\\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="JCBOS_Historical_Account_Data.csv";a.click();URL.revokeObjectURL(url);
+}
+function allRowsForExport(){return DATA.flatMap(s=>s.records.map(r=>({...r,store:s.store})));}
+function populateStores(){const el=document.getElementById("storeFilter");DATA.forEach(s=>{const o=document.createElement("option");o.value=s.store;o.textContent=s.store;el.appendChild(o)});}
+function filtered(){
+ const st=document.getElementById("storeFilter").value, status=document.getElementById("statusFilter").value, q=document.getElementById("search").value.toLowerCase().trim();
+ return getAllRows().filter(r=>(st==="all"||r.store===st)&&(!q||(r.name+" "+r.store).toLowerCase().includes(q))&&
+ (status==="all"||(status==="positive"&&((r.current!=null&&r.last!=null?r.current-r.last:r.variance)>0))||(status==="negative"&&((r.current!=null&&r.last!=null?r.current-r.last:r.variance)<0))||(status==="missing"&&(r.current==null||r.last==null))));
+}
+function render(){
+ const rows=filtered(), t=totals(rows), variance=t.current-t.last;
+ document.getElementById("kpis").innerHTML=[
+ ["CURRENT YEAR SALES",money(t.current),"Recorded entries: "+t.currentCount],
+ ["LAST YEAR SALES",money(t.last),"Recorded entries: "+t.lastCount],
+ ["SALES VARIANCE",money(variance),fmtPct(t.current,t.last)+" vs. last year"],
+ ["FORECASTED SALES",money(t.forecast),"Population recorded: "+number(t.population)]
+ ].map(x=>`<div class="card kpi"><div class="kpi-label">${x[0]}</div><div class="kpi-value">${x[1]}</div><div class="kpi-note">${x[2]}</div></div>`).join("");
+ document.getElementById("recordCount").textContent=rows.length+" records";
+ document.getElementById("dataRows").innerHTML=rows.map(r=>{
+  const si=DATA.findIndex(s=>s.store===r.store);
+  const ri=DATA[si].records.findIndex(x=>x.name===r.name);
+  const v=(r.current!=null&&r.last!=null)?r.current-r.last:r.variance;
+  const vClass=v==null?"neutral":v>0?"positive":v<0?"negative":"neutral";
+  return `<tr>
+   <td>${esc(r.store)}</td>
+   <td><input aria-label="Account name" class="edit-cell name-cell" value="${esc(r.name)}" data-si="${si}" data-ri="${ri}" data-field="name"></td>
+   <td><input aria-label="Population" class="edit-cell" type="number" min="0" step="1" value="${inputVal(r.population)}" placeholder="—" data-si="${si}" data-ri="${ri}" data-field="population"></td>
+   <td><input aria-label="Forecasted sales" class="edit-cell" type="number" min="0" step="0.01" value="${inputVal(r.forecast)}" placeholder="—" data-si="${si}" data-ri="${ri}" data-field="forecast"></td>
+   <td><input aria-label="Current year sales" class="edit-cell" type="number" min="0" step="0.01" value="${inputVal(r.current)}" placeholder="—" data-si="${si}" data-ri="${ri}" data-field="current"></td>
+   <td><input aria-label="Last year sales" class="edit-cell" type="number" min="0" step="0.01" value="${inputVal(r.last)}" placeholder="—" data-si="${si}" data-ri="${ri}" data-field="last"></td>
+   <td class="num ${vClass}">${v==null?"—":(v>0?"+":"")+money(v)}</td>
+  </tr>`;
+ }).join("")||`<tr><td colspan="7" style="text-align:center;padding:28px;color:#7b8493">No matching records.</td></tr>`;
+ bindEditableCells();
+ renderStoreSummary(); drawCharts();
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function renderStoreSummary(){
+ const st=document.getElementById("storeFilter").value;
+ const list=DATA.filter(s=>st==="all"||s.store===st);
+ document.getElementById("storeSummary").innerHTML=list.map(s=>{
+  const r=s.records,t=totals(r);
+  return `<div class="store-chip"><strong>${esc(s.store)}</strong><span>${r.length} accounts • Current: ${money(t.current)}<br>Last year: ${money(t.last)}</span></div>`;
+ }).join("");
+}
+function canvasSetup(id){
+ const c=document.getElementById(id), rect=c.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+ c.width=Math.max(1,rect.width*dpr);c.height=Math.max(1,rect.height*dpr);
+ const ctx=c.getContext("2d");ctx.scale(dpr,dpr);return {ctx,w:rect.width,h:rect.height};
+}
+function drawCharts(){
+ const selected=document.getElementById("storeFilter").value;
+ const stores=DATA.filter(s=>selected==="all"||s.store===selected);
+ let {ctx,w,h}=canvasSetup("salesChart");ctx.clearRect(0,0,w,h);
+ const max=Math.max(1,...stores.flatMap(s=>{let t=totals(s.records);return [t.current,t.last]}));
+ const left=selected==="all"?125:12, right=12, top=12, bottom=24, usable=w-left-right, rowH=(h-top-bottom)/Math.max(1,stores.length);
+ ctx.font="10px Segoe UI";ctx.textBaseline="middle";
+ stores.forEach((s,i)=>{let t=totals(s.records), y=top+i*rowH+rowH/2, bw=usable*.76;
+ ctx.fillStyle="#596477";ctx.textAlign="right";ctx.fillText(shortName(s.store),left-9,y);
+ ctx.fillStyle="#aab3c2";ctx.fillRect(left,y-8,bw*t.last/max,7);
+ ctx.fillStyle="#c8102e";ctx.fillRect(left,y+2,bw*t.current/max,7);
+ });
+ ctx.fillStyle="#7b8493";ctx.textAlign="left";ctx.fillText("Scale based on highest recorded store total",left,h-7);
+ let v=totals(getAllRows()), pos=v.positive, neg=v.negative, miss=v.incomplete;
+ let p=canvasSetup("varianceChart");ctx=p.ctx;w=p.w;h=p.h;ctx.clearRect(0,0,w,h);
+ const items=[["Positive",pos,"#168653"],["Negative",neg,"#c8102e"],["Incomplete",miss,"#aab3c2"]];
+ const sum=items.reduce((a,x)=>a+x[1],0)||1;let x=12, y=25, barW=w-24, barH=28;
+ items.forEach(([label,val,color])=>{let seg=barW*val/sum;ctx.fillStyle=color;ctx.fillRect(x,y,seg,barH);x+=seg});
+ items.forEach(([label,val,color],i)=>{let yy=83+i*42;ctx.fillStyle=color;ctx.fillRect(12,yy-6,9,9);ctx.fillStyle="#344054";ctx.font="12px Segoe UI";ctx.textAlign="left";ctx.fillText(label,29,yy);ctx.textAlign="right";ctx.fillText(val+" accounts",w-12,yy)});
+ ctx.fillStyle="#7b8493";ctx.textAlign="left";ctx.font="10px Segoe UI";ctx.fillText("Variance records counted only where source data exists.",12,h-10);
+}
+function shortName(s){return s.replace("Jollibee ","").replace(" Drive-Thru"," DT").replace("Boundary","Bdy").replace("Town Center","TC");}
+function resetFilters(){document.getElementById("storeFilter").value="all";document.getElementById("statusFilter").value="all";document.getElementById("search").value="";render();}
+loadSaved();
+populateStores();
+["storeFilter","statusFilter","search"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",render));
+render();window.addEventListener("resize",drawCharts);
+</script>
+</body></html>
